@@ -5,6 +5,7 @@ install:
     
 build:
   verbosity: detailed
+  project: VOLib.sln
 
 environment:
     COVERALLS_REPO_TOKEN:  
