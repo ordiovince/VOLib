@@ -1,0 +1,16 @@
+version: 1.0.{build}
+
+install:
+    - nuget restore
+    
+build:
+  verbosity: detailed
+  project: VOLib.sln
+
+environment:
+    COVERALLS_REPO_TOKEN:  
+       secure: J9uFsu9l9Gw5eDQ7ZRhbVxffNea+Fxp3iFzswDqjaOxkgXbfhPPkFKcBTNfaeUQV
+ 
+after_test: 
+# generate report for NUnit testing framework:
+    -cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe" -targetargs:"/domain:single VOLib.Utils.Test/bin/debug/VOLib.Utils.Test.dll" -output:coverage.xml
