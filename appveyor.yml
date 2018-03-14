@@ -20,7 +20,7 @@ test_script:
 
         $nunitconsole = (Resolve-Path "packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe").ToString()
 
-        & $opencover  -register:user -filter:"+[*]*" -target:$nunitconsole -targetargs:"/domain:single VOLib.Utils.Test/bin/$env:CONFIGURATION/VOLib.Utils.Test.dll" -output:opencoverCoverage.xml
+        & $opencover  -register:user -filter:"+[VOLib*]* -[*.Tests]*" -target:$nunitconsole -targetargs:"/domain:single VOLib.Utils.Test/bin/$env:CONFIGURATION/VOLib.Utils.Test.dll" -output:opencoverCoverage.xml
 
         $coveralls = (Resolve-Path "packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
 
