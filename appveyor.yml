@@ -2,15 +2,26 @@ version: 1.0.{build}
 
 install:
     - nuget restore
+	
+configuration: Release
     
 build:
-  verbosity: detailed
+  verbosity: minimal
   project: VOLib.sln
 
 environment:
     COVERALLS_REPO_TOKEN:  
        secure: J9uFsu9l9Gw5eDQ7ZRhbVxffNea+Fxp3iFzswDqjaOxkgXbfhPPkFKcBTNfaeUQV
- 
-after_test: 
-# generate report for NUnit testing framework:
-    -cmd: packages\OpenCover.4.6.519\tools\OpenCover.Console.exe -register:user -filter:"+[*]*" -target:"packages\NUnit.ConsoleRunner.3.8.0\tools\nunit3-console.exe" -targetargs:"/domain:single VOLib.Utils.Test/bin/debug/VOLib.Utils.Test.dll" -output:coverage.xml
+
+test_script:
+- ps: >-
+	$copencover = (Resolve-Path "packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+	$nunitconsole = (Resolve-Path "packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe").ToString()
+
+    $copencover  -register:user -filter:"+[*]*" -target:$nunitconsole -targetargs:"/domain:single VOLib.Utils.Test/bin/$env:CONFIGURATION/VOLib.Utils.Test.dll" -output:opencoverCoverage.xml
+    
+	$coveralls = (Resolve-Path "packages/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    
+    $env:APPVEYOR_BUILD_NUMBER
+    
+    & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
