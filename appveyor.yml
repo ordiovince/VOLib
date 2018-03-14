@@ -14,11 +14,11 @@ environment:
        secure: J9uFsu9l9Gw5eDQ7ZRhbVxffNea+Fxp3iFzswDqjaOxkgXbfhPPkFKcBTNfaeUQV
 
 test_script:
-    - ps: >-
+- ps: >-
 
-		$copencover = (Resolve-Path "packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+        $copencover = (Resolve-Path "packages/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-		$nunitconsole = (Resolve-Path "packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe").ToString()
+        $nunitconsole = (Resolve-Path "packages/NUnit.ConsoleRunner.*/tools/nunit3-console.exe").ToString()
 
         $copencover  -register:user -filter:"+[*]*" -target:$nunitconsole -targetargs:"/domain:single VOLib.Utils.Test/bin/$env:CONFIGURATION/VOLib.Utils.Test.dll" -output:opencoverCoverage.xml
 
